@@ -8,3 +8,4 @@ authors = ["Olivier Rousseau <zeachco@gmail.com>", "mitchmindtree <mitchell.nord
 
 [dependencies]
 nannou = "0.18.1"
+rand = "0.8.5"

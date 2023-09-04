@@ -37,8 +37,8 @@ cargo run --release
 
 ## TODO
 
-- [ ] create a world
-- [ ] create a cell
+- [x] create a world
+- [x] create a cell
 - [ ] create a brain
 - [ ] create a DNA
 - [ ] create a DNA hash
@@ -48,9 +48,9 @@ cargo run --release
 
 ## Environment concepts (world)
 
-- [ ] world is a 2D grid
-- [ ] each grid has attributes
-- [ ] multiple attributes can be found on the same grid position
+- [x] world is a 2D grid
+- [x] each grid has attributes
+- [x] multiple attributes can be found on the same grid position
     - Different types of energy (stable, radioactive)
     - Different types of food (plants, animals)
     - Different types of cells (animals, bacterias)

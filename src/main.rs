@@ -1,35 +1,42 @@
-use nannou::color::named::PURPLE;
+use cell::draw_cells;
+use nannou::color::named::LIGHTGRAY;
 use nannou::prelude::App;
 use nannou::prelude::Frame;
 use nannou::prelude::Update;
+mod cell;
+mod constants;
+mod utilities;
 mod world;
-use world::WorldObject;
+use constants::WORLD_CELL_SIZE;
+use constants::WORLD_SIZE;
+use world::generate_world;
+
+use crate::cell::generate_cells;
 
 fn main() {
-    let mut world_matrix: Vec<Vec<WorldObject>> = Vec::new();
-
-    // for _i in 0..height {
-    //     let mut row: Vec<WorldObject> = Vec::new();
-    //     for _j in 0..width {
-    //         let cells = vec![/* some Cell instances */];
-    //         let properties = WorldProperties { temperature: 0.0, humidity: 0.0 };
-    //         let world_object = WorldObject { cells, properties };
-    //         row.push(world_object);
-    //     }
-    //     world_matrix.push(row);
-    // }
-
-    nannou::app(model).update(update).simple_window(view).run();
+    generate_world();
+    let size = (WORLD_SIZE * WORLD_CELL_SIZE) as u32;
+    nannou::app(model)
+        .update(update)
+        .simple_window(view)
+        .size(size, size)
+        .run();
 }
 
-struct Model {}
+struct Model {
+    cells: Vec<cell::Cell>,
+}
 
-fn model(_app: &App) -> Model {
-    Model {}
+fn model(app: &App) -> Model {
+    let cells = generate_cells(50);
+    Model { cells }
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {}
 
-fn view(_app: &App, _model: &Model, frame: Frame) {
-    frame.clear(PURPLE);
+fn view(app: &App, model: &Model, frame: Frame) {
+    frame.clear(LIGHTGRAY);
+    let draw = app.draw();
+    draw_cells(&draw, &model.cells);
+    draw.to_frame(app, &frame).unwrap();
 }
