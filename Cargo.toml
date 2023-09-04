@@ -9,3 +9,10 @@ authors = ["Olivier Rousseau <zeachco@gmail.com>", "mitchmindtree <mitchell.nord
 [dependencies]
 nannou = "0.18.1"
 rand = "0.8.5"
+
+[profile.dev.package.your_dependency]
+opt-level = 3
+
+[profile.dev]
+debug = false
+codegen-units = 16
