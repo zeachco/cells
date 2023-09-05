@@ -1,8 +1,7 @@
-use crate::cell::Cell;
-
-pub const WORLD_SIZE: u32 = 100;
-pub const WORLD_CELL_SIZE: u32 = 5;
-pub const WORLD_CELL_COUNT: u32 = WORLD_SIZE / WORLD_CELL_SIZE;
+use crate::{
+    cell::Cell,
+    constants::{MAX_WORLD_COORD, MIN_WORLD_COORD, OUT_OF_BOUND_ENERGY_LOSS, WORLD_UNITS},
+};
 
 pub struct WorldProperties {
     /**
@@ -20,18 +19,16 @@ pub struct WorldProperties {
 }
 
 pub struct WorldObject {
-    cells: Vec<Cell>,
     properties: WorldProperties,
 }
 
 pub fn generate_world() {
     let mut world_matrix: Vec<Vec<WorldObject>> = Vec::new();
 
-    for x in 0..WORLD_CELL_COUNT {
+    for _x in 0..WORLD_UNITS {
         let mut world_row: Vec<WorldObject> = Vec::new();
-        for y in 0..WORLD_CELL_COUNT {
+        for _y in 0..WORLD_UNITS {
             let world_object = WorldObject {
-                cells: Vec::new(),
                 properties: WorldProperties {
                     enery_diffusion: 0.1,
                     energy: 0.5,

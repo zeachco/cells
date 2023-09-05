@@ -51,8 +51,54 @@ cargo run --release
 - [x] world is a 2D grid
 - [x] each grid has attributes
 - [x] multiple attributes can be found on the same grid position
-    - Different types of energy (stable, radioactive)
-    - Different types of food (plants, animals)
-    - Different types of cells (animals, bacterias)
 - [ ] everything transform, no delition (death doesn't mean just a removal of the object, consumption is a transformation)
 
+## Neural inputs
+- own energy
+- tile energy
+- left tile energy
+- right tile energy
+- top tile energy
+- bottom tile energy
+
+
+## Technical notes
+
+### Get colors from brain weights config
+
+```toml
+[dependencies]
+sha2 = "0.9"
+hex = "0.4"
+palette = "0.6"
+```
+
+```rust
+extern crate sha2;
+extern crate hex;
+extern crate palette;
+
+use sha2::{Sha256, Digest};
+use palette::{Srgb, Shade};
+
+fn main() {
+    let complex_object = vec![1, 2, 3, 4, 5];
+    let mut hasher = Sha256::new();
+    hasher.update(&complex_object);
+    let result = hasher.finalize();
+    let hex_string = hex::encode(result);
+
+    // Take first 6 characters to form a color code
+    let color_code = &hex_string[0..6];
+    println!("Color Code: #{}", color_code);
+
+    // Convert to RGB color using `palette`
+    let color: Srgb<u8> = Srgb::new(
+        u8::from_str_radix(&color_code[0..2], 16).unwrap(),
+        u8::from_str_radix(&color_code[2..4], 16).unwrap(),
+        u8::from_str_radix(&color_code[4..6], 16).unwrap(),
+    );
+
+    println!("RGB Color: {:?}", color);
+}
+```
