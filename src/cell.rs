@@ -2,10 +2,11 @@ use nannou::Draw;
 use rand::Rng;
 
 use crate::{
-    brain::take_decision,
+    action::CellAction,
+    brain::{take_decision, Brain},
     constants::{
-        CELL_MAX_ENERGY, MAX_WORLD_COORD, MIN_WORLD_COORD, OUT_OF_BOUND_ENERGY_LOSS,
-        UNIT_PIXEL_SIZE, WORLD_UNITS,
+        CELL_MAX_ENERGY, CELL_MIN_ENERGY_TO_FUNCTION, MAX_WORLD_COORD, MIN_WORLD_COORD,
+        OUT_OF_BOUND_ENERGY_LOSS, UNIT_PIXEL_SIZE, WORLD_UNITS,
     },
     utilities::coord_to_pixel,
 };
@@ -15,6 +16,62 @@ pub struct Cell {
     pub adn: Option<String>,
     pub x: i32,
     pub y: i32,
+    pub brain: Brain,
+    pub color: (f32, f32, f32, f32),
+}
+
+fn get_cell_color() -> (f32, f32, f32, f32) {
+    let mut rng = rand::thread_rng();
+    let r: f32 = rng.gen();
+    let g: f32 = rng.gen();
+    let b: f32 = rng.gen();
+    (r, g, b, 1.0)
+}
+
+impl Cell {
+    pub fn new(x: i32, y: i32) -> Cell {
+        return Cell {
+            energy: 1000.0,
+            adn: None,
+            x,
+            y,
+            brain: Brain::new(),
+            color: get_cell_color(),
+        };
+    }
+
+    pub fn act(&mut self, action: CellAction) {
+        if self.energy < CELL_MIN_ENERGY_TO_FUNCTION {
+            return;
+        }
+        match action {
+            CellAction::Up => {
+                self.energy -= 0.1;
+                self.y += 1;
+            }
+            CellAction::Down => {
+                self.energy -= 0.1;
+                self.y -= 1;
+            }
+            CellAction::Right => {
+                self.energy -= 0.1;
+                self.x += 1;
+            }
+            CellAction::Left => {
+                self.energy -= 0.1;
+                self.x -= 1;
+            }
+            CellAction::Give => {
+                self.energy -= 1.0;
+            }
+            CellAction::Take => {
+                self.energy += 1.0;
+            }
+            CellAction::Chill => {
+                self.energy -= 0.01;
+            }
+        }
+    }
 }
 
 pub fn generate_cells(count: u32) -> Vec<Cell> {
@@ -25,12 +82,7 @@ pub fn generate_cells(count: u32) -> Vec<Cell> {
         let to: i32 = WORLD_UNITS as i32 / 2;
         let x = rng.gen_range(from..to);
         let y = rng.gen_range(from..to);
-        cells.push(Cell {
-            energy: 1000.0,
-            x,
-            y,
-            adn: None,
-        });
+        cells.push(Cell::new(x, y));
     }
     cells
 }
@@ -46,10 +98,10 @@ pub fn update_cells(cells: &mut Vec<Cell>) {
 pub fn draw_cells(draw: &Draw, cells: &Vec<Cell>) {
     for cell in cells {
         let (x, y) = coord_to_pixel(cell.x, cell.y);
+        let (r, g, b, a) = cell.color;
         draw.rect()
-            .color(nannou::color::named::STEELBLUE)
-            .w(UNIT_PIXEL_SIZE.into())
-            .h(UNIT_PIXEL_SIZE.into())
+            .color(nannou::color::rgba(r, g, b, a))
+            .w_h(UNIT_PIXEL_SIZE.into(), UNIT_PIXEL_SIZE.into())
             .x_y(x, y);
     }
 }

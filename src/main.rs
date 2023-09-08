@@ -5,9 +5,11 @@ use nannou::color::named::LIGHTGRAY;
 use nannou::prelude::App;
 use nannou::prelude::Frame;
 use nannou::prelude::Update;
+mod action;
 mod brain;
 mod cell;
 mod constants;
+mod tiles;
 mod utilities;
 mod world;
 use world::generate_world;
@@ -25,11 +27,15 @@ fn main() {
 
 struct Model {
     cells: Vec<cell::Cell>,
+    tiles: tiles::Tiles,
 }
 
 fn model(_app: &App) -> Model {
     let cells = generate_cells(50);
-    Model { cells }
+    Model {
+        cells,
+        tiles: tiles::Tiles::new(50),
+    }
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
@@ -39,6 +45,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(LIGHTGRAY);
     let draw = app.draw();
+    model.tiles.draw(&draw);
     draw_cells(&draw, &model.cells);
     draw.to_frame(app, &frame).unwrap();
 }

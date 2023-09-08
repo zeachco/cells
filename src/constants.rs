@@ -1,5 +1,5 @@
-pub const WORLD_UNITS: u8 = 100;
-pub const UNIT_PIXEL_SIZE: u8 = 10;
+pub const WORLD_UNITS: u8 = 50;
+pub const UNIT_PIXEL_SIZE: u8 = 15;
 pub const OUT_OF_BOUND_ENERGY_LOSS: f32 = 5.0;
 pub const CELL_MAX_ENERGY: f32 = 1000.0;
 pub const CELL_MIN_ENERGY_TO_FUNCTION: f32 = 100.0;

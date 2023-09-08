@@ -7,11 +7,10 @@ authors = ["Olivier Rousseau <zeachco@gmail.com>", "mitchmindtree <mitchell.nord
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+nalgebra = "0.32.3"
 nannou = "0.18.1"
 rand = "0.8.5"
-
-[profile.dev.package.your_dependency]
-opt-level = 3
+sha2 = "0.10.7"
 
 [profile.dev]
 debug = false
