@@ -11,13 +11,10 @@ mod cell;
 mod constants;
 mod tiles;
 mod utilities;
-mod world;
-use world::generate_world;
 
 use crate::cell::generate_cells;
 
 fn main() {
-    generate_world();
     nannou::app(model)
         .update(update)
         .simple_window(view)
@@ -31,7 +28,7 @@ struct Model {
 }
 
 fn model(_app: &App) -> Model {
-    let cells = generate_cells(50);
+    let cells = generate_cells(100);
     Model {
         cells,
         tiles: tiles::Tiles::new(50),
@@ -39,6 +36,7 @@ fn model(_app: &App) -> Model {
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
+    model.tiles.update();
     update_cells(&mut model.cells);
 }
 

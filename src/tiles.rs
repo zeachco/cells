@@ -1,16 +1,14 @@
 // 16 bits for a range from -32,768 to 32,767
 
-use nannou::{prelude::BLACK, Draw};
+use nannou::{color::ConvertInto, prelude::rgb, text::Wrap, Draw};
+use rand::Rng;
 
-use crate::{
-    constants::{MAX_WORLD_COORD, MIN_WORLD_COORD, UNIT_PIXEL_SIZE},
-    utilities::coord_to_pixel,
-};
+use crate::{constants::UNIT_PIXEL_SIZE, utilities::coord_to_pixel};
 
 pub struct Tile {
     x: i16,
     y: i16,
-    perperties: TileProperties,
+    properties: TileProperties,
 }
 
 struct TileProperties {
@@ -23,11 +21,21 @@ impl Tile {
         return Tile {
             x,
             y,
-            perperties: TileProperties {
-                energy_diffusion: 0.1,
-                energy: 0.5,
+            properties: TileProperties {
+                energy_diffusion: rand::thread_rng().gen_range(0.0..1.0),
+                energy: rand::thread_rng().gen_range(0.0..1.0),
             },
         };
+    }
+
+    pub fn change_energy(&mut self, offset: f32) {
+        self.properties.energy += offset;
+        if self.properties.energy < 0.0 {
+            self.properties.energy = 0.0;
+        }
+        if self.properties.energy > 1.0 {
+            self.properties.energy = 1.0;
+        }
     }
 }
 
@@ -52,28 +60,41 @@ impl Tiles {
         return Tiles { tiles, size };
     }
 
-    pub fn get(&self, x: i16, y: i16) -> &Tile {
+    pub fn get(&self, x: u16, y: u16) -> &Tile {
+        if x < 0 || x > self.size || y < 0 || y > self.size {
+            panic!("outofbounds")
+        }
+
         return &self.tiles[x as usize][y as usize];
     }
 
-    pub fn get_mut(&mut self, x: i16, y: i16) -> &mut Tile {
+    pub fn get_mut(&mut self, x: u16, y: u16) -> &mut Tile {
         return &mut self.tiles[x as usize][y as usize];
     }
 
-    pub fn draw(&self, draw: &Draw) {
-        let mut x = MIN_WORLD_COORD + 1;
-        let mut y = MIN_WORLD_COORD + 1;
-        while x < MAX_WORLD_COORD {
-            while y < MAX_WORLD_COORD {
-                let (dx, dy) = coord_to_pixel(x, y);
-                draw.rect()
-                    .x_y(dx, dy)
-                    .w_h(UNIT_PIXEL_SIZE as f32, UNIT_PIXEL_SIZE as f32)
-                    .color(BLACK);
-                y += 1;
+    pub fn update(&mut self) {
+        for x in 0..self.size {
+            for y in 0..self.size {
+                let mut tile = self.get_mut(x, y);
+                tile.change_energy(-0.01);
             }
-            x += 1;
-            y = MIN_WORLD_COORD + 1;
+        }
+    }
+
+    pub fn draw(&self, draw: &Draw) {
+        for x in 0..self.size {
+            for y in 0..self.size {
+                let tile = self.get(x, y);
+                let r: f32 = tile.properties.energy;
+                let g: f32 = tile.properties.energy;
+                let b: f32 = tile.properties.energy_diffusion * 0.1;
+                let (dx, dy) = coord_to_pixel(tile.x.into(), tile.y.into());
+                draw.rect()
+                    .x_y(dx + 1.0, dy + 1.0)
+                    .w(UNIT_PIXEL_SIZE as f32 - 2.0)
+                    .h(UNIT_PIXEL_SIZE as f32 - 2.0)
+                    .color(rgb(r, g, b));
+            }
         }
     }
 }
