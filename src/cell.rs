@@ -74,7 +74,7 @@ impl Cell {
     }
 }
 
-pub fn generate_cells(count: u32) -> Vec<Cell> {
+pub fn generate_cells(count: usize) -> Vec<Cell> {
     let mut cells: Vec<Cell> = vec![];
     for _ in 0..count {
         let mut rng = rand::thread_rng();

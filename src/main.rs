@@ -1,6 +1,6 @@
 use cell::draw_cells;
 use cell::update_cells;
-use constants::WORLD_PIXEL_SIZE;
+use constants::{CELLS_PER_GENERATION, WORLD_PIXEL_SIZE};
 use nannou::color::named::LIGHTGRAY;
 use nannou::prelude::App;
 use nannou::prelude::Frame;
@@ -28,7 +28,7 @@ struct Model {
 }
 
 fn model(_app: &App) -> Model {
-    let cells = generate_cells(100);
+    let cells = generate_cells(CELLS_PER_GENERATION);
     Model {
         cells,
         tiles: tiles::Tiles::new(50),
