@@ -2,7 +2,6 @@ use cell::draw_cells;
 use cell::update_cells;
 use constants::WORLD_UNITS;
 use constants::{CELLS_PER_GENERATION, WORLD_PIXEL_SIZE};
-use nannou::color::named::LIGHTGRAY;
 use nannou::prelude::App;
 use nannou::prelude::Frame;
 use nannou::prelude::Update;
@@ -30,18 +29,18 @@ struct Model {
 }
 
 fn model(_app: &App) -> Model {
-    let cells = generate_cells(CELLS_PER_GENERATION);
     let tiles = tiles::Tiles::new(WORLD_UNITS + 1);
+    let cells = generate_cells(CELLS_PER_GENERATION);
     Model { cells, tiles }
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
     model.tiles.update();
-    update_cells(&mut model.cells);
+    update_cells(&mut model.cells, &mut model.tiles);
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
-    frame.clear(LIGHTGRAY);
+    frame.clear(BLACK);
     let draw = app.draw();
     draw.xy(pt2(20.0, -30.0));
     model.tiles.draw(&draw);

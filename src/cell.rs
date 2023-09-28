@@ -8,6 +8,7 @@ use crate::{
         CELL_MAX_ENERGY, CELL_MIN_ENERGY_TO_FUNCTION, MAX_WORLD_COORD, MIN_WORLD_COORD,
         OUT_OF_BOUND_ENERGY_LOSS, UNIT_PIXEL_SIZE, WORLD_UNITS,
     },
+    tiles::Tiles,
     utilities::coord_to_pixel,
 };
 
@@ -16,8 +17,6 @@ pub struct Cell {
     pub adn: Option<String>,
     pub x: i32,
     pub y: i32,
-    pub vx: i32,
-    pub vy: i32,
     pub brain: Brain,
     pub color: (f32, f32, f32, f32),
 }
@@ -27,21 +26,16 @@ fn get_cell_color() -> (f32, f32, f32, f32) {
     let r: f32 = rng.gen();
     let g: f32 = rng.gen();
     let b: f32 = rng.gen();
-    (r, g, b, 1.0)
+    (r, g, b, 0.5)
 }
 
 impl Cell {
     pub fn new(x: i32, y: i32) -> Cell {
-        let mut rng = rand::thread_rng();
-        let vx: i32 = rng.gen_range(-1..1);
-        let vy: i32 = rng.gen_range(-1..1);
         return Cell {
             energy: 1000.0,
             adn: None,
             x,
             y,
-            vx,
-            vy,
             brain: Brain::new(),
             color: get_cell_color(),
         };
@@ -92,9 +86,9 @@ pub fn generate_cells(count: usize) -> Vec<Cell> {
     cells
 }
 
-pub fn update_cells(cells: &mut Vec<Cell>) {
+pub fn update_cells(cells: &mut Vec<Cell>, tiles: &mut Tiles) {
     for cell in cells {
-        take_decision(cell);
+        take_decision(cell, tiles);
         handle_out_of_bound(cell);
         limit_energy(cell);
     }
@@ -115,23 +109,19 @@ fn handle_out_of_bound(cell: &mut Cell) {
     if cell.x > MAX_WORLD_COORD {
         cell.x = MAX_WORLD_COORD;
         cell.energy -= OUT_OF_BOUND_ENERGY_LOSS;
-        cell.vx = cell.vx.abs() * -1;
     }
     if cell.x < MIN_WORLD_COORD {
         cell.x = MIN_WORLD_COORD;
         cell.energy -= OUT_OF_BOUND_ENERGY_LOSS;
-        cell.vx = cell.vx.abs();
     }
     if cell.y > MAX_WORLD_COORD {
         cell.y = MAX_WORLD_COORD;
         cell.energy -= OUT_OF_BOUND_ENERGY_LOSS;
-        cell.vy = cell.vy.abs() * -1;
     }
 
     if cell.y < MIN_WORLD_COORD {
         cell.y = MIN_WORLD_COORD;
         cell.energy -= OUT_OF_BOUND_ENERGY_LOSS;
-        cell.vy = cell.vy.abs();
     }
 }
 

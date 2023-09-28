@@ -1,6 +1,6 @@
 use rand::Rng;
 
-use crate::{action::CellAction, cell::Cell, constants::CELL_MIN_ENERGY_TO_FUNCTION};
+use crate::{action::CellAction, cell::Cell, constants::CELL_MIN_ENERGY_TO_FUNCTION, tiles::Tiles};
 
 struct Neurone {
     weight: f32,
@@ -74,9 +74,16 @@ impl Brain {
     }
 }
 
-pub fn take_decision(cell: &mut Cell) {
+pub fn take_decision(cell: &mut Cell, tiles: &mut Tiles) {
     if cell.energy <= CELL_MIN_ENERGY_TO_FUNCTION {
         return;
+    }
+
+    let (x, y) = (cell.x as u16, cell.y as u16);
+    let tile = tiles.get_mut(x, y);
+    if tile.properties.energy > tile.properties.energy_diffusion {
+        tile.change_energy(tile.properties.energy_diffusion * -1.0);
+        cell.energy += tile.properties.energy_diffusion
     }
 
     // cell.x += cell.vx;

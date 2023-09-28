@@ -8,12 +8,12 @@ use crate::{constants::UNIT_PIXEL_SIZE, utilities::coord_to_pixel};
 pub struct Tile {
     x: i16,
     y: i16,
-    properties: TileProperties,
+    pub properties: TileProperties,
 }
 
-struct TileProperties {
-    energy_diffusion: f32,
-    energy: f32,
+pub struct TileProperties {
+    pub energy_diffusion: f32,
+    pub energy: f32,
 }
 
 impl Tile {
@@ -22,7 +22,7 @@ impl Tile {
             x,
             y,
             properties: TileProperties {
-                energy_diffusion: rand::thread_rng().gen_range(0.0..1.0),
+                energy_diffusion: rand::thread_rng().gen_range(0.01..0.1),
                 energy: rand::thread_rng().gen_range(0.0..1.0),
             },
         };
@@ -36,6 +36,13 @@ impl Tile {
         if self.properties.energy > 1.0 {
             self.properties.energy = 1.0;
         }
+    }
+
+    pub fn get_color(&self) -> (f32, f32, f32) {
+        let r: f32 = self.properties.energy_diffusion;
+        let g: f32 = self.properties.energy;
+        let b: f32 = 0.0;
+        return (r, g, b);
     }
 }
 
@@ -73,26 +80,26 @@ impl Tiles {
     }
 
     pub fn update(&mut self) {
-        for x in 0..self.size {
-            for y in 0..self.size {
-                let tile = self.get_mut(x, y);
-                tile.change_energy(-0.01);
-            }
-        }
+        // for x in 0..self.size {
+        //     for y in 0..self.size {
+        //         let tile = self.get_mut(x, y);
+        //         // tile.change_energy(-0.01);
+        //     }
+        // }
     }
 
     pub fn draw(&self, draw: &Draw) {
+        let pad = 3.0;
+        let dpad = 6.0;
         for x in 0..self.size {
             for y in 0..self.size {
                 let tile = self.get(x, y);
-                let r: f32 = tile.properties.energy;
-                let g: f32 = tile.properties.energy;
-                let b: f32 = tile.properties.energy_diffusion * 0.1;
+                let (r, g, b) = tile.get_color();
                 let (dx, dy) = coord_to_pixel(tile.x.into(), tile.y.into());
                 draw.rect()
-                    .x_y(dx + 1.0, dy + 1.0)
-                    .w(UNIT_PIXEL_SIZE as f32 - 2.0)
-                    .h(UNIT_PIXEL_SIZE as f32 - 2.0)
+                    .x_y(dx + pad, dy + pad)
+                    .w(UNIT_PIXEL_SIZE as f32 - dpad)
+                    .h(UNIT_PIXEL_SIZE as f32 - dpad)
                     .color(rgb(r, g, b));
             }
         }

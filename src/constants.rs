@@ -1,7 +1,7 @@
 // performance constants
-pub const WORLD_UNITS: u16 = 20;
-pub const UNIT_PIXEL_SIZE: u16 = 30;
-pub const CELLS_PER_GENERATION: usize = 50;
+pub const WORLD_UNITS: u16 = 25;
+pub const UNIT_PIXEL_SIZE: u16 = 20;
+pub const CELLS_PER_GENERATION: usize = 100;
 
 // mechanics constants
 pub const OUT_OF_BOUND_ENERGY_LOSS: f32 = 5.0;
