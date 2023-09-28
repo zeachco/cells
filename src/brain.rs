@@ -86,11 +86,6 @@ pub fn take_decision(cell: &mut Cell, tiles: &mut Tiles) {
         cell.energy += tile.properties.energy_diffusion
     }
 
-    // cell.x += cell.vx;
-    // cell.y += cell.vy;
-
-    // return;
-
     // let actions () = cell.brain.handle_inputs(&cell);
     match rand::thread_rng().gen_range(0..6) {
         0 => cell.act(CellAction::Up),

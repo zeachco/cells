@@ -1,5 +1,7 @@
+use std::ops::Index;
+
 use nannou::Draw;
-use rand::Rng;
+use rand::{seq::index, Rng};
 
 use crate::{
     action::CellAction,
@@ -10,6 +12,7 @@ use crate::{
     },
     tiles::Tiles,
     utilities::coord_to_pixel,
+    Model,
 };
 
 pub struct Cell {
@@ -87,6 +90,8 @@ pub fn generate_cells(count: usize) -> Vec<Cell> {
 }
 
 pub fn update_cells(cells: &mut Vec<Cell>, tiles: &mut Tiles) {
+    cells.retain_mut(|cell| cell.energy > CELL_MIN_ENERGY_TO_FUNCTION);
+    println!("cells count: {}", cells.len());
     for cell in cells {
         take_decision(cell, tiles);
         handle_out_of_bound(cell);
