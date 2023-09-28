@@ -7,5 +7,5 @@ pub const CELLS_PER_GENERATION: usize = 25;
 
 // computed constants
 pub const WORLD_PIXEL_SIZE: u32 = WORLD_UNITS as u32 * UNIT_PIXEL_SIZE as u32;
-pub const MIN_WORLD_COORD: i32 = (WORLD_UNITS as f32 * -0.5) as i32;
-pub const MAX_WORLD_COORD: i32 = (WORLD_UNITS as f32 * 0.5) as i32;
+pub const MIN_WORLD_COORD: i32 = 0;
+pub const MAX_WORLD_COORD: i32 = WORLD_UNITS as i32;

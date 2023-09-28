@@ -78,10 +78,8 @@ pub fn generate_cells(count: usize) -> Vec<Cell> {
     let mut cells: Vec<Cell> = vec![];
     for _ in 0..count {
         let mut rng = rand::thread_rng();
-        let from: i32 = WORLD_UNITS as i32 / -2;
-        let to: i32 = WORLD_UNITS as i32 / 2;
-        let x = rng.gen_range(from..to);
-        let y = rng.gen_range(from..to);
+        let x = rng.gen_range(0..WORLD_UNITS as i32);
+        let y = rng.gen_range(0..WORLD_UNITS as i32);
         cells.push(Cell::new(x, y));
     }
     cells
