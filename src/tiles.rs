@@ -1,6 +1,6 @@
 // 16 bits for a range from -32,768 to 32,767
 
-use nannou::{color::ConvertInto, prelude::rgb, text::Wrap, Draw};
+use nannou::{prelude::rgb, Draw};
 use rand::Rng;
 
 use crate::{constants::UNIT_PIXEL_SIZE, utilities::coord_to_pixel};
@@ -61,7 +61,7 @@ impl Tiles {
     }
 
     pub fn get(&self, x: u16, y: u16) -> &Tile {
-        if x < 0 || x > self.size || y < 0 || y > self.size {
+        if x > self.size || y > self.size {
             panic!("outofbounds")
         }
 
@@ -75,7 +75,7 @@ impl Tiles {
     pub fn update(&mut self) {
         for x in 0..self.size {
             for y in 0..self.size {
-                let mut tile = self.get_mut(x, y);
+                let tile = self.get_mut(x, y);
                 tile.change_energy(-0.01);
             }
         }

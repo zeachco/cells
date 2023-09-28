@@ -5,7 +5,7 @@ use crate::{action::CellAction, cell::Cell, constants::CELL_MIN_ENERGY_TO_FUNCTI
 struct Neurone {
     weight: f32,
     bias: f32,
-    activationFnIndex: u8,
+    activation_fn_index: u8,
 }
 
 impl Neurone {
@@ -13,12 +13,12 @@ impl Neurone {
         Neurone {
             weight: rand::thread_rng().gen_range(-1.0..1.0),
             bias: rand::thread_rng().gen_range(-1.0..1.0),
-            activationFnIndex: rand::thread_rng().gen_range(0..3),
+            activation_fn_index: rand::thread_rng().gen_range(0..3),
         }
     }
 
     fn receive_input(&self, input: f32) -> f32 {
-        match self.activationFnIndex {
+        match self.activation_fn_index {
             0 => {
                 // sigmoid
                 1.0 / (1.0 + (-input).exp())
@@ -78,6 +78,12 @@ pub fn take_decision(cell: &mut Cell) {
     if cell.energy <= CELL_MIN_ENERGY_TO_FUNCTION {
         return;
     }
+
+    // cell.x += cell.vx;
+    // cell.y += cell.vy;
+
+    // return;
+
     // let actions () = cell.brain.handle_inputs(&cell);
     match rand::thread_rng().gen_range(0..6) {
         0 => cell.act(CellAction::Up),

@@ -1,10 +1,12 @@
 use cell::draw_cells;
 use cell::update_cells;
+use constants::WORLD_UNITS;
 use constants::{CELLS_PER_GENERATION, WORLD_PIXEL_SIZE};
 use nannou::color::named::LIGHTGRAY;
 use nannou::prelude::App;
 use nannou::prelude::Frame;
 use nannou::prelude::Update;
+use nannou::prelude::*;
 mod action;
 mod brain;
 mod cell;
@@ -29,10 +31,8 @@ struct Model {
 
 fn model(_app: &App) -> Model {
     let cells = generate_cells(CELLS_PER_GENERATION);
-    Model {
-        cells,
-        tiles: tiles::Tiles::new(50),
-    }
+    let tiles = tiles::Tiles::new(WORLD_UNITS + 1);
+    Model { cells, tiles }
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
@@ -43,6 +43,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 fn view(app: &App, model: &Model, frame: Frame) {
     frame.clear(LIGHTGRAY);
     let draw = app.draw();
+    draw.xy(pt2(20.0, -30.0));
     model.tiles.draw(&draw);
     draw_cells(&draw, &model.cells);
     draw.to_frame(app, &frame).unwrap();
